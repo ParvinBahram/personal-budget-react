@@ -7,3 +7,11 @@
 input{
     @apply outline-0 border border-gray-300 p-1
 }
+
+/* .field-label{
+    @apply     mb-2
+} */
+ 
+.field-input{
+    @apply mt-2 mb-4
+}
