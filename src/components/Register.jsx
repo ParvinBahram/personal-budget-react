@@ -1,8 +1,9 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 
 const initialState= {username:"", password:"", phoneNumber:"", email:"" };
 
 export default function Register({onRegister}){
+    const [error,setError] = useState({})
 
  function reducer(state, action){
     switch (action.type) {
@@ -18,7 +19,7 @@ export default function Register({onRegister}){
             }
            
 
- const handleSubmitChange= (e)=>{
+ const handleChange= (e)=>{
     dispatch( {
         type:"setField",
         name: e.target.name,
@@ -28,10 +29,29 @@ export default function Register({onRegister}){
 
     const handleSubmit= (e)=>{
         e.preventDefault();
-        onRegister(user);
-        dispatch({type:"reset"})
-        console.log(`username:${user.username}, password:${user.password}, phone:${user.phoneNumber}, email:${user.email}`);
-    }
+        let submitErr = {};
+
+        if(user.username <4){
+            submitErr.username ="حداقل4کاراکتر";
+        }
+         if(user.password.length <6){
+            submitErr.password ="طول رمز نباید کمتر از 6 باشد"
+        }
+         if(user.phoneNumber.length < 11 || user.phoneNumber.length >11){
+            submitErr.phoneNumber ="شماره تلفن معتبر نیست"
+        }
+         if(!user.email.includes("@")){
+            submitErr.email="ایمیل باید شامل@باشد"
+        }
+
+        setError(submitErr);
+
+        if(Object.keys(submitErr).length === 0){
+            setError({});
+            onRegister(user);
+            dispatch({type:"reset"})
+            console.log(`username:${user.username}, password:${user.password}, phone:${user.phoneNumber}, email:${user.email}`);
+    }}
 
 
     const [user,dispatch ]=useReducer(reducer, initialState)
@@ -39,18 +59,23 @@ export default function Register({onRegister}){
     return(
         <div className="py-20 px-10  text-center">
             <h2 className="mb-5">پر کردن تمام فیلدها ضروری است</h2>
-            <form className="p-4 w-60 border border-gray-400 rounded mx-auto" onSubmit={handleSubmit}>
+            <form className="p-4 w-60 border border-gray-400 rounded mx-auto space-y-6" onSubmit={handleSubmit}>
                 <label className="field-label">نام کاربری</label>
-                <input className="field-input" name="username" value={user.username} type="text"  onChange={handleSubmitChange}/>
+                <input className="field-input" name="username" value={user.username} type="text"  onChange={handleChange}/>
+                    {error.username && <p className="text-xs text-red-500 -mt-3">{error.username}</p>}
 
                 <label className="field-label">رمز عبور</label>
-                <input className="field-input" name="password" value={user.password} type="text"  onChange={handleSubmitChange}/>
+                <input className="field-input" name="password" value={user.password} type="text"  onChange={handleChange}/>
+                    {error.password && <p className="text-xs text-red-500 -mt-3">{error.password}</p>}
 
                 <label className="field-label">شماره موبایل</label>
-                <input className="field-input" name="phoneNumber" value={user.phoneNumber} type="number" onChange={handleSubmitChange} />
+                <input className="field-input" name="phoneNumber" value={user.phoneNumber} type="number" onChange={handleChange} />
+                    {error.phoneNumber && <p className="text-xs text-red-500 -mt-3">{error.phoneNumber}</p>}
 
                 <label className="field-label">ایمیل</label>
-                <input className="field-input" name="email" value={user.email} type="email" onChange={handleSubmitChange} />
+                <input className="field-input" name="email" value={user.email} type="email" onChange={handleChange} />
+                    {error.email && <p className="text-xs text-red-500 -mt-3">{error.email}</p>}
+
                 <button className="rounded bg-green-400 p-1 text-center" type="submit">ثبت نام</button>
             </form>
         </div>

@@ -7,6 +7,7 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
     const [form, setForm] = useState(initialState);
     const [showForm, setShowForm] = useState(false);
       const [editTransaction, setEditTransaction] = useState(null);
+      const [showAll, setShowAll] = useState(false);
 
 
     // save to local storage
@@ -66,24 +67,31 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
         setShowForm(false);
     }
 
+    const visibleTr= showAll ? transactions : transactions.slice(-5);
     return(
         <div className="py-5 px-6 min-h-screen">
-             <button  className="cursor-pointer bg-teal-400 rounded border-none mb-5 p-1" onClick={()=>setShowForm(true)}>
+             <button  className="cursor-pointer bg-teal-400 rounded border-none mt-5 mb-7 p-1" onClick={()=>{setShowForm(true), setForm(initialState), setEditTransaction(null)}}>
              Add new ➕
              </button> 
-                
-             {transactions.map((t,i)=>
-            < div key={t.id} className="mb-5 border w-max p-2">
+            <div className="flex flex-col sm:grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 mx-auto ">
+             {visibleTr.map((t,i)=>
+            < div key={t.id} className={`mb-5 border-none outline-0 shadow-xl  w-40 p-3 mx-auto rounded bg-gray-200 ${checked ? "bg-white text-gray-900" : ""}`}
+>
             <p className="font-bold">transaction {i+1}</p>
             <p className="" >type= {t.type}</p>
             <p className="">category= {t.category}</p>
             <p className="">amount= {t.amount}</p>
             <p className="">date= {t.date}</p>
-            <button className="bg-teal-400 rounded border-none px-1 mt-2" onClick={()=> handleEdit(t)}>Edit</button>
-            <button className="bg-teal-400 rounded border-none px-1 mt-2 ml-4" onClick={()=> handleDelete(t.id)}>Delete</button>
+            <button className="bg-teal-300 rounded border-none px-1 mt-2" onClick={()=> handleEdit(t)}>Edit</button>
+            <button className="bg-teal-300 rounded border-none px-1 mt-2 ml-4" onClick={()=> handleDelete(t.id)}>Delete</button>
+              </div>
+              )}
+              </div> 
 
-            </div> 
-          )}
+              {transactions.length > 5 && <div className="mx-auto text-center w-50 my-5">
+              <button className="mt-5 rounded border-2 border-teal-500 otline-0 p-1 text-teal-600 w-full " onClick={()=> setShowAll(open => !open)}>{ showAll ? "نمایش کمتر" : "نمایش همه" }</button>
+            </div>
+            }
 
              {showForm && 
              <form action="" className=" mx-auto w-40 border p-2 fixed top-20 right-20" onSubmit={handleSubmit}>
