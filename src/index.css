@@ -5,7 +5,7 @@
 }
 
 input{
-    @apply outline-0 border border-gray-300 p-1
+    @apply outline-0 border-none rounded shadow-lg p-1
 }
 
 /* .field-label{
@@ -13,5 +13,5 @@ input{
 } */
  
 .field-input{
-    @apply mt-2 mb-4
+    @apply mt-2 mb-4 w-full
 }

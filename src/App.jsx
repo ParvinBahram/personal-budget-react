@@ -1,22 +1,26 @@
-import  {Routes, Route, useNavigate} from "react-router-dom";
-import Home from "./pages/Home";
-import Setting from "./pages/Setting";
-import Transactions from "./pages/Transactions.jsx";
-import Chart from "./pages/Chart";
-import Navbar from "./components/menu.jsx";
-import { useEffect, useState } from "react";
-import Login from "./components/Login.jsx";
-import Register from "./components/Register.jsx";
-import ForgetPassword from "./pages/ForgetPassword.jsx";
-import Profile from "./pages/Profile.jsx";
-import ProtectedRoute from "./components/ProtectedRoute.jsx";
+
+import  {Routes, Route, useNavigate, BrowserRouter} from "react-router-dom";
+import { lazy, Suspense, useEffect, useState } from "react";
+import Spinner from "./components/Loading.jsx";
+
+const Home = lazy(() => import ("./pages/Home"));
+const Setting = lazy(()=> import ("./pages/Setting"));
+const Transactions = lazy(()=> import  ("./pages/Transactions.jsx"));
+const Chart = lazy(()=> import ("./pages/Chart"));
+const Navbar = lazy(()=> import  ("./components/menu.jsx"));
+const Login = lazy(()=> import ("./components/Login.jsx"));
+const Register = lazy(()=> import  ("./components/Register.jsx"));
+const Profile = lazy(()=> import  ("./pages/Profile.jsx"));
+const ProtectedRoute = lazy(()=> import  ("./components/ProtectedRoute.jsx"));
 
 
 const STORAGE_KEY = "app_transaction";
 const USER_STORAGE_kEY = "my_user" ;
+const DATE_TYPE ="date_type";
 
 export default function App(){
   const navigate = useNavigate()
+
 
   // read localstorage
   const [transactions, setTransactions] = useState(()=>{
@@ -35,76 +39,90 @@ export default function App(){
 
 
   // set user in localstorage
-  const [user,setUser]= useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const savedUser = localStorage.getItem(USER_STORAGE_kEY);
-  const parsedUser = JSON.parse(savedUser);
-  let loginErr= null;
+  const [user,setUser]= useState(()=>{
+      const savedUser = localStorage.getItem(USER_STORAGE_kEY);
+      const parsedUser = JSON.parse(savedUser) ;
+      return savedUser ? parsedUser : null ;
+  });
 
-   useEffect(()=>{
-     if(!savedUser){
-       localStorage.setItem("isLoggedIn", "false");
+ 
+  const [isLoggedIn, setIsLoggedIn] = useState(()=>{
+     return localStorage.getItem("isLoggedIn") === "true" ;
+  });
+ 
+  const [loginError, setLogginError]=useState(null);
+
+// انتخاب نوع تاریخ
+  const [dateType, setDateType]=useState(()=>{
+      return localStorage.getItem(DATE_TYPE) ||"jalali" })
+
+  useEffect(()=>{
+     localStorage.setItem(DATE_TYPE, dateType)
+  },[dateType])
+
+  
+     useEffect(()=>{
+    if(!user){
        setIsLoggedIn(false);
-       setTransactions([]);
-      } 
-      setUser(parsedUser)
-    },[]);
-    
-    
-    useEffect(()=>{
-      const loginStatus = localStorage.getItem("isLoggedIn");
-        setIsLoggedIn(loginStatus === "true");
-    },[])
+        setUser (null);
+         localStorage.setItem("isLoggedIn", "false")
+    }
+  },[user]);
+
 
     const handleRegister=(userData)=>{
       localStorage.setItem(USER_STORAGE_kEY, JSON.stringify(userData));
       localStorage.setItem("isLoggedIn", "true");
       setUser(userData);
       setIsLoggedIn(true);
-      navigate("/")
+      navigate("/",{replace:true})
     }
 
+    
   
     const handleLogin=(loginData)=>{
+       const savedUser = localStorage.getItem(USER_STORAGE_kEY);
+       const parsedUser = JSON.parse(savedUser);
+    
       if(!savedUser){
-        loginErr= "NO_USER";
-        return false;
+        return "NO_USER";
       }
+
       if(loginData.username !== parsedUser.username || loginData.password !== parsedUser.password ){
-        loginErr = "INVALID_DATA";
-        return  false;
+        return  "INVALID_DATA";
       }
         localStorage.setItem("isLoggedIn", "true");
-        setUser(parsedUser);
         setIsLoggedIn(true);
-      return true;
+        setLogginError(null);
+
+      return null;
       }
       
 
       const handleLogout=()=>{
      setIsLoggedIn(false);
+     setUser (null);
      localStorage.setItem("isLoggedIn", "false")
    }
     
   return (
-      <div className={`py-5 px-4 ${checked ? "bg-gray-900 text-white" : ""}`}>
+      <div  className={`py-5 px-4  ${checked ? "bg-gray-900 text-white" : ""}`}>
+       <Suspense fallback = {<Spinner/>}>
          <Navbar checked={checked} isLoggedIn={isLoggedIn} user={user} />
          <Routes>
-              {/* <Route path="/" element={!isLoggedIn ?  */}
-                  {/* اضافه کردن neted route /setting */}
-                {/* </Route> */}
               <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
                 <Route path="/" element={<Home  transactions={transactions} user={user} onLogout={handleLogout}/>}  />
-                <Route path="/setting" element={<Setting checked={checked} setChecked={setChecked} />} />
-                <Route path="/profile" element={<Profile checked={checked} setChecked={setChecked} />} />
+                <Route path="/setting" element={<Setting checked={checked} setChecked={setChecked} dateType={dateType}
+                 setDateType={setDateType} DATE_TYPE={DATE_TYPE}/>} />
+                <Route path="/profile" element={<Profile checked={checked} user={user}  USER_STORAGE_kEY={USER_STORAGE_kEY} />} />
                 <Route path="/transactions" element={<Transactions STORAGE_KEY={STORAGE_KEY} transactions={transactions} 
-                   setTransactions={setTransactions} checked={checked} />}/>
+                   setTransactions={setTransactions} checked={checked} dateType={dateType}/>}/>
                 <Route path="/chart" className="" element={<Chart/>}/>
               </Route>
-                  <Route  path="/login" element={<Login  onLogin={handleLogin} loginErr={loginErr}/>}/>
-              <Route path="forgetPassword" element={<ForgetPassword user={user}  setUser={setUser} parsedUser={parsedUser} USER_STORAGE_kEY={USER_STORAGE_kEY}/>} />
+                  <Route  path="/login" element={<Login  onLogin={handleLogin} loginError={loginError}/>}/>
               <Route path="/register" element={<Register onRegister={handleRegister} />} />
       </Routes>
+        </Suspense>
       </div>
   )
 }

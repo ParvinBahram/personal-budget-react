@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { NavLink, useNavigate } from "react-router-dom";
 
-export default function Login({onLogin, loginErr}){
+export default function Login({onLogin}){
 const [login, setLogin] = useState({username:"", password:""});
 const navigate = useNavigate()
 
@@ -13,15 +13,15 @@ const navigate = useNavigate()
     const handleSubmit= (e)=>{
         e.preventDefault();
         const isLogged = onLogin(login);
-        if(!isLogged){
-            if(loginErr ==="NO_USER"){
+        if(isLogged){
+            if(isLogged ==="NO_USER"){
                  alert("شما حسابی ندارید. ابتدا یک حساب ایجاد کنید")
             }else  {
                 alert("نام کاربری یا رمز عبور اشتباه است")
             }
             return;
         }
-        navigate("/")
+        navigate("/",{replace:true})
     }
 
 
