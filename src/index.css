@@ -8,10 +8,11 @@ input{
     @apply outline-0 border-none rounded shadow-lg p-1
 }
 
-/* .field-label{
-    @apply     mb-2
-} */
- 
+
 .field-input{
     @apply mt-2 mb-4 w-full
+}
+
+.dot{
+    @apply w-5 h-5 rounded-full bg-teal-600  will-change-transform
 }

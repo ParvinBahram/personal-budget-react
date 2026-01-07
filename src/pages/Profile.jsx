@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AnimatedPage from "../../animations/AnimatedPage";
 
 export default function Profile({user, USER_STORAGE_kEY}){
         const [editUser,setEditUser]= useState(user);
@@ -20,6 +21,7 @@ export default function Profile({user, USER_STORAGE_kEY}){
     }
 
     return(
+        <AnimatedPage >
         <div className="min-h-screen">
              <form className="my-10 py-8 p-4 w-70 border border border-gray-300 shadow-xl  rounded mx-auto space-y-5 text-end"
                onSubmit={handleSubmit}>
@@ -49,6 +51,6 @@ export default function Profile({user, USER_STORAGE_kEY}){
                 </div>
             </form>
             </div>
-        
+        </AnimatedPage>
     ) 
 }

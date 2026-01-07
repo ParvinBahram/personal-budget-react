@@ -2,8 +2,10 @@
 import  {Routes, Route, useNavigate, BrowserRouter} from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
 import Spinner from "./components/Loading.jsx";
+import AnimatedPage from "../animations/AnimatedPage.jsx";
 
 const Home = lazy(() => import ("./pages/Home"));
+// const Piee = lazy(() => import ("./pages/piechart"));
 const Setting = lazy(()=> import ("./pages/Setting"));
 const Transactions = lazy(()=> import  ("./pages/Transactions.jsx"));
 const Chart = lazy(()=> import ("./pages/Chart"));
@@ -27,7 +29,9 @@ export default function App(){
     const savedTrans =localStorage.getItem(STORAGE_KEY);
     return savedTrans ? JSON.parse(savedTrans) : [];
   });
-
+ 
+//  console.log(transactions);
+   
   // set theme and save in localstorage
   const [checked, setChecked]= useState(()=>{
     const savedTheme = localStorage.getItem("theme");
@@ -109,6 +113,7 @@ export default function App(){
       <div  className={`py-5 px-4  ${checked ? "bg-gray-900 text-white" : ""}`}>
        <Suspense fallback = {<Spinner/>}>
          <Navbar checked={checked} isLoggedIn={isLoggedIn} user={user} />
+         <AnimatedPage exitBeforeEnter>
          <Routes>
               <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
                 <Route path="/" element={<Home  transactions={transactions} user={user} onLogout={handleLogout}/>}  />
@@ -116,12 +121,13 @@ export default function App(){
                  setDateType={setDateType} DATE_TYPE={DATE_TYPE}/>} />
                 <Route path="/profile" element={<Profile checked={checked} user={user}  USER_STORAGE_kEY={USER_STORAGE_kEY} />} />
                 <Route path="/transactions" element={<Transactions STORAGE_KEY={STORAGE_KEY} transactions={transactions} 
-                   setTransactions={setTransactions} checked={checked} dateType={dateType}/>}/>
-                <Route path="/chart" className="" element={<Chart/>}/>
+                   setTransactions={setTransactions} checked={checked} dateType={dateType} />}/>
+                <Route path="/chart" className="" element={<Chart  Transactions={Transactions}  STORAGE_KEY={STORAGE_KEY}  dateType={dateType} transactions={transactions} />}/>
               </Route>
-                  <Route  path="/login" element={<Login  onLogin={handleLogin} loginError={loginError}/>}/>
+                  <Route  path="/login" element={<Login  onLogin={handleLogin} loginError={loginError} />}/>
               <Route path="/register" element={<Register onRegister={handleRegister} />} />
       </Routes>
+      </AnimatedPage>
         </Suspense>
       </div>
   )

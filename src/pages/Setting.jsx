@@ -1,12 +1,14 @@
-export default function Setting({checked,setChecked,dateType,setDateType}){
-  
 
+import AnimatedPage from"../../animations/AnimatedPage"
+
+
+export default function Setting({checked,setChecked,dateType,setDateType}){
 const setTheme = (e)=>{
     setChecked(e.target.checked);
 }
     
     return(
-        
+        <AnimatedPage>
         <div className="ml-6 py-2 min-h-screen">
             <div className="mb-5">
             <label className="">تغییر تم 
@@ -23,7 +25,7 @@ const setTheme = (e)=>{
                 </select>
             </div>
 
-            <div className="">
+            <div className="mb-5">
                 <label htmlFor="selected-date"> نوع تاریخ </label>
                 <select name="" value={dateType} onChange={(e)=>setDateType(e.target.value)} id="selected-date" className={`${checked ? "text-black" : ""} p-0.5 rounded border border-teal-600 outline-0`}>
                     <option value="jalali">شمسی</option>
@@ -31,7 +33,11 @@ const setTheme = (e)=>{
                     <option value="hijri">قمری</option>
                 </select>
             </div>
+
+
+            
         </div>
+        </AnimatedPage>
         
     )
 }

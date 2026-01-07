@@ -1,8 +1,10 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
+import AnimatedPage from "../../animations/AnimatedPage";
 
 export default function Home({transactions, user, onLogout}){
     
     return(
+        <AnimatedPage>
     <>
         <div className=" px-4  flex flex-row">
             {/* محتوای نوار سمت چپ home */}
@@ -19,6 +21,7 @@ export default function Home({transactions, user, onLogout}){
              <div className="ml-4 py-2 ">
                 <NavLink to="/setting" >تنظیمات</NavLink>
             </div>
+
             </div>
 
             <div className="ml-5 w-full text-end py-5">
@@ -30,14 +33,18 @@ export default function Home({transactions, user, onLogout}){
                  </div>
              </>
                  ): (
+                    <div className="">
                     <p >شما <strong>{transactions.length}</strong> تراکنش دارید. برای دیدن جزئیات
                     <NavLink to="/transactions" className="font-bold"> اینجا </NavLink> کلیک کنید
                       </p>
+
+                      </div>
                  )}
             
             </div>
         </div>
         </>
     
+    </AnimatedPage>
     )
 }
