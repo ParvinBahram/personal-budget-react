@@ -3,15 +3,16 @@ import  {Routes, Route, useNavigate, BrowserRouter} from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
 import Spinner from "./components/Loading.jsx";
 import AnimatedPage from "../animations/AnimatedPage.jsx";
+import LoginContext, { ThemeContext } from "./components/Context.js";
 
 const Home = lazy(() => import ("./pages/Home"));
-// const Piee = lazy(() => import ("./pages/piechart"));
 const Setting = lazy(()=> import ("./pages/Setting"));
 const Transactions = lazy(()=> import  ("./pages/Transactions.jsx"));
 const Chart = lazy(()=> import ("./pages/Chart"));
 const Navbar = lazy(()=> import  ("./components/menu.jsx"));
-const Login = lazy(()=> import ("./components/Login.jsx"));
-const Register = lazy(()=> import  ("./components/Register.jsx"));
+const LoginPage = lazy(()=> import ("./components/LoginPage.jsx"));
+const RegisterPage = lazy(()=> import  ("./components/RegisterPage.jsx"));
+const Account = lazy(()=> import  ("./pages/Account.jsx"));
 const Profile = lazy(()=> import  ("./pages/Profile.jsx"));
 const ProtectedRoute = lazy(()=> import  ("./components/ProtectedRoute.jsx"));
 
@@ -54,7 +55,6 @@ export default function App(){
      return localStorage.getItem("isLoggedIn") === "true" ;
   });
  
-  const [loginError, setLogginError]=useState(null);
 
 // انتخاب نوع تاریخ
   const [dateType, setDateType]=useState(()=>{
@@ -97,7 +97,6 @@ export default function App(){
       }
         localStorage.setItem("isLoggedIn", "true");
         setIsLoggedIn(true);
-        setLogginError(null);
 
       return null;
       }
@@ -110,25 +109,34 @@ export default function App(){
    }
     
   return (
-      <div  className={`py-5 px-4  ${checked ? "bg-gray-900 text-white" : ""}`}>
-       <Suspense fallback = {<Spinner/>}>
-         <Navbar checked={checked} isLoggedIn={isLoggedIn} user={user} />
+    <div  className={` ${checked ? "bg-gray-900 text-white" : ""}`}>
+      <LoginContext.Provider value={isLoggedIn}>
+       <ThemeContext.Provider value={{checked, setChecked}}>  
+         <Suspense fallback = {<Spinner/>}>
          <AnimatedPage exitBeforeEnter>
          <Routes>
-              <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
-                <Route path="/" element={<Home  transactions={transactions} user={user} onLogout={handleLogout}/>}  />
-                <Route path="/setting" element={<Setting checked={checked} setChecked={setChecked} dateType={dateType}
-                 setDateType={setDateType} DATE_TYPE={DATE_TYPE}/>} />
-                <Route path="/profile" element={<Profile checked={checked} user={user}  USER_STORAGE_kEY={USER_STORAGE_kEY} />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/menu" element={<Navbar  user={user} isLoggedIn={isLoggedIn}/>} /> 
+                <Route path="/" element={<Home  transactions={transactions} user={user}/>}  />
+                <Route path="/account" element={<Account user={user}   isLoggedIn={isLoggedIn}  onLogout={handleLogout} />}>
+                    <Route path="setting"  element={<Setting  dateType={dateType}
+                     setDateType={setDateType} DATE_TYPE={DATE_TYPE}/>} />
+                    <Route index  element={<Setting/>}/>
+                    <Route path="profile" element={<Profile  user={user}  USER_STORAGE_kEY={USER_STORAGE_kEY} isLoggedIn={isLoggedIn}  onLogout={handleLogout}/>} />
+                </Route>
                 <Route path="/transactions" element={<Transactions STORAGE_KEY={STORAGE_KEY} transactions={transactions} 
-                   setTransactions={setTransactions} checked={checked} dateType={dateType} />}/>
-                <Route path="/chart" className="" element={<Chart  Transactions={Transactions}  STORAGE_KEY={STORAGE_KEY}  dateType={dateType} transactions={transactions} />}/>
+                   setTransactions={setTransactions} dateType={dateType} />}/>
+                <Route path="/chart" className="" element={<Chart  Transactions={Transactions}  
+                    STORAGE_KEY={STORAGE_KEY}  dateType={dateType} transactions={transactions} />}/>
+                <Route path="/lock" />
               </Route>
-                  <Route  path="/login" element={<Login  onLogin={handleLogin} loginError={loginError} />}/>
-              <Route path="/register" element={<Register onRegister={handleRegister} />} />
-      </Routes>
-      </AnimatedPage>
+                  <Route  path="/loginPage" element={<LoginPage  onLogin={handleLogin} />}/>
+              <Route path="/registerPage" element={<RegisterPage onRegister={handleRegister} />} />
+        </Routes>
+        </AnimatedPage>
         </Suspense>
+       </ThemeContext.Provider>
+      </LoginContext.Provider>
       </div>
   )
 }

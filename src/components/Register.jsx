@@ -59,7 +59,7 @@ export default function Register({onRegister}){
     return(
         <div className="py-20 px-10  text-center">
             <h2 className="mb-5">پر کردن تمام فیلدها ضروری است</h2>
-            <form className="p-4 w-60 border border-gray-400 rounded mx-auto space-y-6" onSubmit={handleSubmit}>
+            <form className="p-4 w-60 bg-white/60 rounded mx-auto space-y-6" onSubmit={handleSubmit}>
                 <label className="field-label">نام کاربری</label>
                 <input className="field-input" name="username" value={user.username} type="text"  onChange={handleChange}/>
                     {error.username && <p className="text-xs text-red-500 -mt-3">{error.username}</p>}
@@ -76,7 +76,7 @@ export default function Register({onRegister}){
                 <input className="field-input" name="email" value={user.email} type="email" onChange={handleChange} />
                     {error.email && <p className="text-xs text-red-500 -mt-3">{error.email}</p>}
 
-                <button className="rounded bg-green-400 p-1 text-center" type="submit">ثبت نام</button>
+                <button className="rounded bg-teal-500 p-1 text-center" type="submit">ثبت نام</button>
             </form>
         </div>
     )

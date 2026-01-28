@@ -1,18 +1,29 @@
 @import "tailwindcss";
 
 .active{
-    @apply text-blue-500 
+    @apply text-blue-600 
 }
 
 input{
-    @apply outline-0 border-none rounded shadow-lg p-1
+    @apply outline-0 border border-gray-300 rounded shadow-lg 
 }
 
 
 .field-input{
-    @apply mt-2 mb-4 w-full
+    @apply mt-2 mb-4 w-full p-1 pl-2
 }
 
 .dot{
     @apply w-5 h-5 rounded-full bg-teal-600  will-change-transform
+}
+
+@font-face{
+    font-family: "Vazirmatn";
+    src: url("./assets/font/Vazirmatn-Regular.woff2");
+    font-weight: 400;
+    font-style: normal;
+}
+
+body{
+    font-family:"Vazirmatn"
 }

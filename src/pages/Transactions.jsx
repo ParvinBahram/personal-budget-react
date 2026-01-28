@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
@@ -9,15 +9,26 @@ import arabic from "react-date-object/calendars/arabic" ;
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import AnimatedPage from "../../animations/AnimatedPage";
 import AnimatedModal from "../../animations/AnimatedModal";
+import { ThemeContext } from "../components/Context";
 
 const initialState = {type:"", category:"", amount:"", date: ""};
+const SORT_TYPE = "sort_type"
 
-export default function Transactions({ transactions, setTransactions, STORAGE_KEY,dateType, checked}){
+export default function Transactions({ transactions, setTransactions, STORAGE_KEY,dateType}){
+  
     const [form, setForm] = useState(initialState);
     const [showModal, setShowModal] = useState(false);
-      const [editTransaction, setEditTransaction] = useState(null);
-      const [showAll, setShowAll] = useState(false);
-      const [date, setDate]=useState(null);
+    const [editTransaction, setEditTransaction] = useState(null);
+    const [showAll, setShowAll] = useState(false);
+    const [date, setDate]=useState(null);
+    const {checked} = useContext(ThemeContext);
+   
+    const [sortType, setSortType]= useState(()=>{
+      return localStorage.getItem(SORT_TYPE)
+    })
+    useEffect(()=>{
+      localStorage.setItem(SORT_TYPE, sortType)
+    },[sortType])
 
 
   const calenderConfig = {
@@ -53,7 +64,6 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
   }
 
   const handleDelete = (id)=> {
-    console.log("deleted");
     const newTrans = transactions.filter((t) => t.id !== id)
     setTransactions(newTrans);
   }
@@ -63,15 +73,16 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
     setTransactions(prev=>
       prev.map((transaction) => transaction.id === id? {...transaction, ...updateFields}: transaction )
     )
-
   }
 
     const handleChange = (e)=>{
-      const {name,value} = e.target;
-      
+      const name = e.target.name;
+      const value= e.target.value ;
+    
       setForm((prev) => ({...prev, [name]:value }))
     }
 
+  
     useEffect(()=>{
         if(editTransaction){ 
           setShowModal(true)          
@@ -85,33 +96,67 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
     },[editTransaction])
 
 
+    const absAmount = (type, amount)=>{
+      const value = Math.abs(Number(amount));
+      return type==="expense" ? -value : value;
+    }
+
     const handleSubmit= (e)=>{
+       const absForm = {
+        ...form,
+        amount: absAmount(form.type, form.amount),
+  };
+
         e.preventDefault();
         if(editTransaction){
-            updateTransaction(editTransaction.id, form)
+            updateTransaction(editTransaction.id, absForm)
         }else{
-            addTransaction(form) ;
+            addTransaction(absForm) ;
         }
         setForm(initialState);
         setShowModal(false);
     }
 
+     const totalAmount = transactions.reduce(
+  (sum, t) => sum + t.amount,
+  0
+);
+
     const visibleTr= showAll ? transactions : transactions.slice(-5);
     return(
       <AnimatedPage >
         <div dir="rtl" className="py-5 px-6 min-h-screen">
-             <button  className="cursor-pointer bg-teal-400 rounded border-none mt-5 mb-7 p-1" 
+          <div className="flex flex-col sm:flex-row  sm:justify-center gap-10 items-center mt-5 mb-10 p-1">
+            <p className={totalAmount < 0 ? "text-red-600" : "text-green-600"}>
+  جمع کل: {totalAmount}
+</p>
+
+            <div className="">
+             <button  className="cursor-pointer bg-teal-400 rounded border-none p-1" 
              onClick={()=>{setShowModal(true), setForm(initialState), setEditTransaction(null)}}>
               ایجاد تراکنش ➕
              </button> 
+             </div>
+             <div className="">
+              <label  >مرتب سازی</label>
+               <select name="" id="" className="border border-teal-600 px-1 mr-2" 
+                 onChange={(e)=> {setSortType(e.target.value), console.log(e.target.value)}}>
+                <option value="newest" className="">جدیدترین</option>
+                <option value="oldest" className="">قدیمی ترین</option>
+                <option value="expense" className="">هزینه</option>
+                <option value="earnings" className="">درآمد</option>
+               </select>
+             </div>
+          </div>
             <div className="flex flex-col gap-y-10 sm:grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 mx-auto ">
              {visibleTr.map((t,i)=>
-            < div key={t.id} className={`flex flex-col  items-start gap-y-3 border-none outline-0 shadow-xl  w-40 xl:w-46 p-3 mx-auto rounded bg-gray-200 ${checked ? "bg-white text-gray-900" : ""}`}
+            < div key={t.id} className={`flex flex-col  items-start gap-y-3 w-40 xl:w-46 p-3 mx-auto rounded border border-gray-200
+               ${checked ? "bg-white text-gray-900" : ""}`}
 >
-            <p className="font-bold text-center"> تراکنش  {i+1}</p>
-            <p className={t.type === "debt" ? "text-red-600" : "text-green-600"} > نوع = {t.type  === "debt" ?  " بدهکاری" : "بستانکاری"}</p>
+            {/* <p className="font-bold text-center"> تراکنش  {i+1}</p> */}
+            <p className={t.type === "expense" ? "text-red-600" : "text-green-600"} > نوع = {t.type  === "expense" ?  " هزینه" : "درآمد"}</p>
             <p className="">دسته بندی = {t.category}</p>
-            <p className=""> مقدار= {t.amount}</p>
+            <p className={t.type === "expense" ? "text-red-600" : "text-green-600"}> مقدار ={t.amount} </p>
             <p className=""> تاریخ =  {t.date}</p>
 
              <div className="flex justify-center mx-auto gap-4">
@@ -133,25 +178,26 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
               onClick={()=>setTransactions([])} > حذف همه </button>
              </div>
 
-             {/* {showModal &&  */}
-             
-                 <AnimatedModal isOpen={showModal} onClose= {(()=>{
+
+             {/* {showModal  */}
+              
+              <AnimatedModal isOpen={showModal} onClose= {(()=>{
                 setShowModal(false);
                 setForm(initialState);
                 setEditTransaction(null)
       })}>
-             <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[100] 
-               before:fixed before:inset-0 before:w-full before:h-full before:bg-gray-300/70 overflow-auto">
-               
+             <div className={`fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[100] 
+               before:fixed before:inset-0 before:w-full before:h-full before:bg-gray-300/70 overflow-auto ${checked?"text-black" : ""} `}>
+               <button  className="p-1 z-[102] fixed top-6 left-6  cursor-pinter" onClick={()=>{setShowModal(false), setForm(initialState), setEditTransaction(null)}}>❌</button>
                 <form action="" className="  mt-10 mx-auto bg-white z-[102] p-4 rounded-xl shadow-xl" onSubmit={handleSubmit}>
                 <div className="flex flex-col space-y-4 ">
                   <select className="text-sm border border-gray-400" name="type" value={form.type} id="" onChange={handleChange}>
                 <option value="" disabled >نوع تراکنش</option>
-                <option className="text-red-600" value="debt">بدهکاری</option>
-                <option  className="text-green-600" value="credit">بستانکاری</option>
+                <option className="text-red-600" value="expense">هزینه</option>
+                <option  className="text-green-600" value="earnings">درآمد</option>
               </select>
-                <input type="text" name="category" value={form.category} className="" placeholder="category" onChange={handleChange} required/>
-                <input type="number" name="amount" value={form.amount} className="" placeholder="amount" onChange={handleChange} required/>
+                <input type="text" name="category" value ={form.category} className="" placeholder="category" onChange={handleChange} required/>
+                <input type="number" name="amount" value ={form.amount} className="" placeholder="amount" onChange={handleChange} required/>
                   <DatePicker value={date} onChange={(value) => {
                       setDate(value);
                       setForm(prev => ({
@@ -174,9 +220,7 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
              </div>
              </AnimatedModal>
              </div>
-                  {/* } */}
-
-        {/* </div> */}
+             
         </AnimatedPage>
     )
 }

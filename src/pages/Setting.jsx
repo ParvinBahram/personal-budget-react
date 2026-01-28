@@ -1,8 +1,11 @@
 
+import { useContext } from "react";
 import AnimatedPage from"../../animations/AnimatedPage"
+import { ThemeContext } from "../components/Context";
 
 
-export default function Setting({checked,setChecked,dateType,setDateType}){
+export default function Setting({dateType,setDateType}){
+    const {checked,setChecked}= useContext(ThemeContext);
 const setTheme = (e)=>{
     setChecked(e.target.checked);
 }
