@@ -47,8 +47,8 @@ export default function Profile({user, USER_STORAGE_kEY,isLoggedIn, onLogout}){
                 </div>
                 
                 <div className="flex justify-around">
-                <button className="rounded bg-teal-400 p-1 text-center " type="submit">ذخیره تغییرات</button> 
-                <button className="rounded bg-teal-400 p-1 text-center  " type="button" onClick={()=> setIsEditing(true)}>ویرایش</button> 
+                <button className=" text-teal-600 p-1 text-center " type="submit">ذخیره </button> 
+                <button className=" text-teal-600 p-1 text-center  " type="button" onClick={()=> setIsEditing(true)}>ویرایش</button> 
                 </div>
             </form>
         </div>

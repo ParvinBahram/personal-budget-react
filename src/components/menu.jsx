@@ -14,13 +14,13 @@ export default function Navbar({user}){
     }    
     return(
         <>
-        <nav className="flex  justify-around items-center  py-4 shadow-lg " dir='rtl'>
-            <button className="hidden sm:block text-teal-600" onClick={handleClick}>
+        <nav className={`flex  justify-around items-center  py-4 shadow-lg ${checked? "bg-gray-800 text-white" : ""}`} dir='rtl'>
+            <button className="hidden sm:block text-teal-500" onClick={handleClick}>
                 <i className="fas fa-user  mr-2 text-teal-500 text-xl" ></i>{isLoggedIn ? user?.username : ""}</button>
-            <span className="sm:hidden" onClick={()=> setIsOpen(!isOpen)}><i className="fa fa-bars text-xl text-teal-600 "></i></span>
+            <span className="sm:hidden" onClick={()=> setIsOpen(!isOpen)}><i className="fa fa-bars text-xl text-teal-500 "></i></span>
               
             {/* منو در حالت مدیوم به بالا */}
-            <p className="text-lg text-teal-700  ">مدیریت هزینه ها💳</p>
+            <p className="text-lg text-teal-500  ">مدیریت هزینه ها💳</p>
              <ul className="hidden sm:flex sm:flex-row justify-center gap-4 lg:gap-6" >
                     <NavLink className={({isActive})=> isActive ? "active" : ""} to="/" >خانه</NavLink>
                     <NavLink className={({isActive})=> isActive ? "active" : ""} to="/transactions">تراکنش ها</NavLink>
@@ -28,10 +28,10 @@ export default function Navbar({user}){
                 </ul>
         </nav>
 
-        {/* منو در حالت مدیوم به پایین */}
+        {/* منو در حالت موبایل */}
         {isOpen && (
            
-         <ul className={`pt-8 pb-5 absolute top-0 right-0 pr-3 w-[35%] sm:hidden flex flex-col space-y-4 min-h-screen shadow-lg ${checked? "bg-gray-800 text-white" : "bg-teal-200 shadow-[4px_0_0_0.3"}`}>
+         <ul className={`pt-8 pb-5 absolute top-0 right-0 pr-3 w-[35%] sm:hidden flex flex-col space-y-4 min-h-screen shadow-lg ${checked? "bg-gray-800 text-white" : "bg-teal-100 shadow-[4px_0_0_0.3"}`}>
             <button  className="text-start cursor-pointer ml-3" onClick={()=> setIsOpen(false)}><i className="fas fa-close"></i></button>
              <div className="flex flex-col space-y-4 items-end">
                <NavLink className={({isActive})=> isActive ? "active" : ""} to="/" onClick={()=> setIsOpen(false)} >خانه
@@ -55,5 +55,3 @@ export default function Navbar({user}){
 
 
 
-{/* <button className=" w-full py-2 px-0" onClick={handleClick}>
-                        <i className="fa fa-user-circle mr-2  text-xl"></i>{isLoggedIn ? user.username : ""}</button> */}

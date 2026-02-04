@@ -14,7 +14,7 @@ export default function Account({user, isLoggedIn, onLogout}){
                  <div className="text-end py-12 ">
                    <Outlet  />
                  </div>
-        <div className={`min-h-screen bg-teal-100 px-4 py-7  text-end shadow-2xl"  ${checked ? "bg-gray-800 text-white" : ""} `} >
+        <div className={`min-h-screen  px-4 py-7  text-end shadow-2xl"  ${checked ? "bg-gray-800 text-white" : "bg-gray-100 text-black shadow-[-6px_0_12px_-4px_rgba(0,0,0,0.2)]"} `} >
             <p className=""> خوش آمدید {isLoggedIn ? user?.username : ""} </p>
             <div className="flex flex-col mt-10 space-y-5">
                  <NavLink to="setting">تنظیمات <i className="fas fa-gear ml-2"></i></NavLink>

@@ -73,35 +73,36 @@ export default function Chart({STORAGE_KEY, dateType, transactions}){
   
     return(
         <AnimatedPage>
-        <div className="py-5 px-20 min-h-screen">
+        <div className="py-5 px-20 min-h-screen " >
           <h2 className="text-center my-8">نمودارها</h2>
-          <div className=" flex flex-col sm:flex-row justify-center items-center mx-auto gap-4 mb-10 md:gap-8 ">
+          <div className=" flex flex-col sm:flex-row justify-center items-center mx-auto gap-6 mb-10 md:gap-8" dir="rtl">
             <div className="">
-            <label htmlFor=""  className="mr-2"> از تاریخ</label>
+            <label htmlFor=""  className="ml-2"> از تاریخ</label>
                <DatePicker value={fromDate} onChange={(value) => {
                   setFromDate(value);
                        }}
                     calendar = {calenderConfig[dateType]?.calendar || persian}
                     locale={calenderConfig[dateType]?.locale }
-                    inputClass="w-full"  placeholder="date"  required />
+                    inputClass="w-30 p-1 text-center"  placeholder="date"  required />
                     </div>
 
                     <div className="">
-                    <label htmlFor="" className="mr-2"> تا تاریخ</label>
+                    <label htmlFor="" className="ml-2"> تا تاریخ</label>
                  <DatePicker value={toDate} onChange={(value) => {
                   setToDate(value);
                        }}
                     calendar = {calenderConfig[dateType]?.calendar || persian}
                     locale={calenderConfig[dateType]?.locale }
-                    inputClass="w-full"  placeholder="date"  required />
+                    inputClass="w-30 p-1  text-center"  placeholder="date"  required />
                     </div>
 
                     <div className="">
-                <label htmlFor=""> نوع نمودار  </label>
-                 <select name="" id="" className="p-0.5 rounded border border-teal-600 outline-0 ml-5" onChange={(e)=> setChartType(e.target.value)}>
+                      <label htmlFor=""> نوع نمودار  </label>
+                 <select name="" id="" className="p-0.5 rounded border border-gray-300 outline-0 ml-2 text-sm" onChange={(e)=> setChartType(e.target.value)}>
                     <option value="pie">دایره ای</option>
                     <option value="bar"> میله ای</option>
                  </select>
+                 
             </div>
           </div>
           {chartType === "bar" && (

@@ -1,9 +1,11 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { NavLink, useNavigate } from "react-router-dom";
+import { ThemeContext } from "./Context";
 
 export default function Login({onLogin}){
 const [login, setLogin] = useState({username:"", password:""});
   const [loginError, setLoginError]=useState("");
+ const {checked} = useContext(ThemeContext);
 
 const navigate = useNavigate()
 
@@ -33,7 +35,7 @@ const navigate = useNavigate()
     return(
         <div className="py-10 px-10 text-center">
             <h2 className="mb-5">ورود به حساب کاربری</h2>
-            <form className="p-4 w-60  bg-white/70  rounded mx-auto " onSubmit={handleSubmit}>
+            <form className={`${checked ? "bg-white/10" : "bg-white/80"} p-4 w-60 rounded mx-auto`} onSubmit={handleSubmit}>
                 <label className="field-label text-end">نام کاربری</label>
                 <input className="field-input  p-2 text-end " name="username" value={login.username} type="text"  onChange={handleChange}/>
 
@@ -41,9 +43,9 @@ const navigate = useNavigate()
                 <input className="field-input  p-2" name="password" value={login.password} type="text"  onChange={handleChange}/>
                 <button className="rounded bg-teal-400 p-1 text-center mt-3" type="submit">ورود</button>
         </form>
-                <NavLink  to="/registerPage" className="inline-block mr-3 text-sm text-blue-800"  >ایجاد حساب کاربری</NavLink  >
+                <NavLink  to="/registerPage" className="inline-block mr-3 text-sm text-blue-700"  >ایجاد حساب کاربری</NavLink  >
                 <p className="mt-5 inline-block">حساب کاربری ندارید؟</p>
-                <NavLink to="/forgetPassword" className="block mt-2 text-sm text-blue-700" >فراموشی گذرواژه</NavLink>
+                <NavLink to="/forgetPassword" className="block mt-2 text-sm text-blue-600" >فراموشی گذرواژه</NavLink>
 
                 {loginError && <div className="fixed top-10 left-1/2 -translate-x-1/2  border-none rounded-lg bg-red-200 px-2 py-4  text-center text-red-600">
                  <p>{loginError}</p>

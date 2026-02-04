@@ -4,14 +4,16 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import Spinner from "./components/Loading.jsx";
 import AnimatedPage from "../animations/AnimatedPage.jsx";
 import LoginContext, { ThemeContext } from "./components/Context.js";
+import LoginPage from "./components/LoginPage.jsx"
+import RegisterPage from "./components/RegisterPage.jsx"
 
 const Home = lazy(() => import ("./pages/Home"));
 const Setting = lazy(()=> import ("./pages/Setting"));
 const Transactions = lazy(()=> import  ("./pages/Transactions.jsx"));
 const Chart = lazy(()=> import ("./pages/Chart"));
 const Navbar = lazy(()=> import  ("./components/menu.jsx"));
-const LoginPage = lazy(()=> import ("./components/LoginPage.jsx"));
-const RegisterPage = lazy(()=> import  ("./components/RegisterPage.jsx"));
+// const LoginPage = lazy(()=> import ("./components/LoginPage.jsx"));
+// const RegisterPage = lazy(()=> import  ("./components/RegisterPage.jsx"));
 const Account = lazy(()=> import  ("./pages/Account.jsx"));
 const Profile = lazy(()=> import  ("./pages/Profile.jsx"));
 const ProtectedRoute = lazy(()=> import  ("./components/ProtectedRoute.jsx"));

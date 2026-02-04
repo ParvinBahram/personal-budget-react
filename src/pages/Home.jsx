@@ -6,7 +6,7 @@ export default function Home({transactions, user, onLogout}){
     return(
         <AnimatedPage>
     <>
-        <div className="flex flex-row">
+        <div className="flex flex-row min-h-screen">
             <div className="ml-5 w-full text-end py-5">
             {transactions.length === 0 ? ( 
               <>
