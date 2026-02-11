@@ -10,6 +10,7 @@ import arabic_ar from "react-date-object/locales/arabic_ar";
 import AnimatedPage from "../../animations/AnimatedPage";
 import AnimatedModal from "../../animations/AnimatedModal";
 import { ThemeContext } from "../components/Context";
+import { handleSort } from "../components/Sort";
 
 const initialState = {type:"", category:"", amount:"", date: ""};
 const SORT_TYPE = "sort_type"
@@ -22,7 +23,12 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
     const [showAll, setShowAll] = useState(false);
     const [date, setDate]=useState(null);
     const {checked} = useContext(ThemeContext);
-   
+    const [filteredTrns, setFilteredTrns]= useState(transactions);
+    
+useEffect(() => {
+  setFilteredTrns(transactions);
+}, [transactions]);
+
     const [sortType, setSortType]= useState(()=>{
       return localStorage.getItem(SORT_TYPE)
     })
@@ -122,10 +128,10 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
   0
 );
 
-    const visibleTr= showAll ? transactions : transactions.slice(-5);
+    const visibleTr= showAll ? filteredTrns : filteredTrns.slice(-5);
     return(
       <AnimatedPage >
-        <div dir="rtl" className="py-5 px-6 min-h-screen">
+        <div dir="rtl" className="py-5 px-6 min-h-screen bg-amber-100/50">
           <div className="flex flex-col sm:flex-row  sm:justify-center gap-10 items-center mt-5 mb-10 p-1">
             <p>  جمع کل :  <span className={totalAmount < 0 ? "text-red-600" : "text-green-600"}>{totalAmount}</span></p>
             <div className="">
@@ -135,7 +141,9 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
              </div>
              <div className="">
               <label htmlFor="">مرتب سازی </label>
-               <select name="" id="" className=" rounded outline outline-teal-400 mr-1" onChange={(e) => handleSort(e.target.value)}>
+               <select name="" id="" className=" rounded outline outline-teal-400 mr-1" onChange={(e) =>{
+                  const sorted = handleSort(e.target.value, transactions);
+                  setFilteredTrns(sorted) }}>
                 <option value="newest" className="">جدیدترین</option>
                 <option value="oldest" className="">قدیمی ترین</option>
                 <option value="expense" className="">هزینه</option>
@@ -145,12 +153,12 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
           </div>
 
           {/* نمایش تراکنشها */}
-            <div className=" grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 mx-auto ">
+            <div className=" grid flex-col-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5  gap-x-3 gap-y-7 mx-auto ">
              {visibleTr.map((t,i)=>
-            < div key={t.id} className={`flex flex-col  items-start  w-full p-3 mx-auto  border border-gray-500
+            < div key={t.id} className={`flex flex-col space-y-2 items-start  w-55 p-3 mx-auto  border-0 rounded-lg bg-white shadow-lg
                ${checked ? "bg-white text-gray-900" : ""}`}
 >
-            <p > نوع =  <span className={t.type === "expense" ? "text-red-600" : "text-green-600"} >{t.type  === "expense" ?  " هزینه" : "درآمد"}</span></p>
+             <p className={t.type === "expense" ? "text-red-600" : "text-green-600"} >{t.type  === "expense" ?  "  ⬆ هزینه" : "درآمد ⬇"}</p>
             <p className="">دسته بندی = {t.category}</p>
             < p> مقدار =  <span className={t.type === "expense" ? "text-red-600" : "text-green-600"}>{t.amount}</span></p>
             <p className=""> تاریخ =  {t.date}</p>
@@ -163,7 +171,7 @@ export default function Transactions({ transactions, setTransactions, STORAGE_KE
               )}
               </div> 
 
-              <div className="flex flex-row justify-center gap-x-5 mt-8">
+              <div className="flex flex-row justify-center gap-x-5 mt-12">
               {transactions.length > 5 && 
               <div className=" text-center w-auto ">
               <button className=" rounded  otline-0 p-1 text-teal-600 " 

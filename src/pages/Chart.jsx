@@ -1,4 +1,4 @@
-import { Pie,PieChart, Cell, BarChart,Bar, XAxis, YAxis, Tooltip } from "recharts";
+import { Pie,PieChart, Cell, BarChart,Bar, XAxis, YAxis, Tooltip, Legend , ResponsiveContainer} from "recharts";
 import { useEffect, useState } from "react";
 import AnimatedPage from "../../animations/AnimatedPage";
 import DatePicker from "react-multi-date-picker";
@@ -105,27 +105,7 @@ export default function Chart({STORAGE_KEY, dateType, transactions}){
                  
             </div>
           </div>
-          {chartType === "bar" && (
-            <BarChart width={500} height={300} 
-                data={chartData} >
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#11b0ccff" />
-                </BarChart>
-          )}
-
-           {chartType === "pie" && (
-            <PieChart width={300} height={300} >
-                <Pie 
-                data={chartData} 
-                dataKey="value"
-                nameKey="name"
-                outerRadius = {100}
-                 />
-                    <Tooltip />
-                </PieChart>
-          )}
+       
         </div>
         </AnimatedPage>
         

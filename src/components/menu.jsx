@@ -2,8 +2,8 @@ import { useContext, useState } from 'react'
 import { NavLink, useNavigate } from'react-router-dom'
 import LoginContext, { ThemeContext } from './Context';
 
-export default function Navbar({user}){
-    const {isLoggedIn} = useContext(LoginContext);
+export default function Navbar(){
+    const {isLoggedIn, user} = useContext(LoginContext);
     const {checked} = useContext(ThemeContext);
     const[isOpen, setIsOpen] = useState(false);
     const navigate=useNavigate();
@@ -15,8 +15,8 @@ export default function Navbar({user}){
     return(
         <>
         <nav className={`flex  justify-around items-center  py-4 shadow-lg ${checked? "bg-gray-800 text-white" : ""}`} dir='rtl'>
-            <button className="hidden sm:block text-teal-500" onClick={handleClick}>
-                <i className="fas fa-user  mr-2 text-teal-500 text-xl" ></i>{isLoggedIn ? user?.username : ""}</button>
+            <button className="hidden sm:block text-teal-500"  onClick={handleClick}>
+                <i className="fas fa-user  mr-2 text-teal-500 text-xl"  ></i>{isLoggedIn ? user?.username : ""}</button>
             <span className="sm:hidden" onClick={()=> setIsOpen(!isOpen)}><i className="fa fa-bars text-xl text-teal-500 "></i></span>
               
             {/* منو در حالت مدیوم به بالا */}

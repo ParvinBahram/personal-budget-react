@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import bg from "../assets/img/img3.jpg"
+import bg from "../assets/img/img1.jpg"
 import Register from "./Register"
 import { ThemeContext } from "./Context"
 

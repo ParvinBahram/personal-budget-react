@@ -6,6 +6,7 @@ import AnimatedPage from "../animations/AnimatedPage.jsx";
 import LoginContext, { ThemeContext } from "./components/Context.js";
 import LoginPage from "./components/LoginPage.jsx"
 import RegisterPage from "./components/RegisterPage.jsx"
+import ForgetPassword from "./components/ForgetPassword.jsx";
 
 const Home = lazy(() => import ("./pages/Home"));
 const Setting = lazy(()=> import ("./pages/Setting"));
@@ -90,6 +91,7 @@ export default function App(){
        const savedUser = localStorage.getItem(USER_STORAGE_kEY);
        const parsedUser = JSON.parse(savedUser);
     
+    
       if(!savedUser){
         return "NO_USER";
       }
@@ -99,6 +101,7 @@ export default function App(){
       }
         localStorage.setItem("isLoggedIn", "true");
         setIsLoggedIn(true);
+        setUser(parsedUser);
 
       return null;
       }
@@ -112,19 +115,19 @@ export default function App(){
     
   return (
     <div  className={` ${checked ? "bg-gray-900 text-white" : ""}`}>
-      <LoginContext.Provider value={isLoggedIn}>
+      <LoginContext.Provider value={{isLoggedIn,user, setUser}}>
        <ThemeContext.Provider value={{checked, setChecked}}>  
          <Suspense fallback = {<Spinner/>}>
          <AnimatedPage exitBeforeEnter>
          <Routes>
               <Route element={<ProtectedRoute />}>
-                <Route path="/menu" element={<Navbar  user={user} isLoggedIn={isLoggedIn}/>} /> 
+                <Route path="/menu" element={<Navbar />} /> 
                 <Route path="/" element={<Home  transactions={transactions} user={user}/>}  />
                 <Route path="/account" element={<Account user={user}   isLoggedIn={isLoggedIn}  onLogout={handleLogout} />}>
-                    <Route path="setting"  element={<Setting  dateType={dateType}
-                     setDateType={setDateType} DATE_TYPE={DATE_TYPE}/>} />
-                    <Route index  element={<Setting/>}/>
-                    <Route path="profile" element={<Profile  user={user}  USER_STORAGE_kEY={USER_STORAGE_kEY} isLoggedIn={isLoggedIn}  onLogout={handleLogout}/>} />
+                    <Route path="setting"  element={<Setting  dateType={dateType} 
+                      setDateType={setDateType} DATE_TYPE={DATE_TYPE}/>} />
+                    {/* <Route index  element={<Setting/>}/> */}
+                    <Route path="profile" element={<Profile  user={user}  USER_STORAGE_kEY={USER_STORAGE_kEY} />} />
                 </Route>
                 <Route path="/transactions" element={<Transactions STORAGE_KEY={STORAGE_KEY} transactions={transactions} 
                    setTransactions={setTransactions} dateType={dateType} />}/>
@@ -134,6 +137,7 @@ export default function App(){
               </Route>
                   <Route  path="/loginPage" element={<LoginPage  onLogin={handleLogin} />}/>
               <Route path="/registerPage" element={<RegisterPage onRegister={handleRegister} />} />
+              <Route path="/forgetPassword" element={<ForgetPassword USER_STORAGE_kEY={USER_STORAGE_kEY} />}/>
         </Routes>
         </AnimatedPage>
         </Suspense>

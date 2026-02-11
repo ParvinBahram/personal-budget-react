@@ -16,7 +16,6 @@ const navigate = useNavigate()
 
     const handleSubmit= (e)=>{
         e.preventDefault();
-
         const result = onLogin(login);
         
             if(result ==="NO_USER"){
@@ -33,9 +32,9 @@ const navigate = useNavigate()
 
 
     return(
-        <div className="py-10 px-10 text-center">
+        <div className="pb-10 pt-30 sm:pt-20 px-10  text-center">
             <h2 className="mb-5">ورود به حساب کاربری</h2>
-            <form className={`${checked ? "bg-white/10" : "bg-white/80"} p-4 w-60 rounded mx-auto`} onSubmit={handleSubmit}>
+            <form className={`${checked ? "bg-white/10" : "bg-white shadow-lg"} p-4 w-60 rounded mx-auto h-max`} onSubmit={handleSubmit}>
                 <label className="field-label text-end">نام کاربری</label>
                 <input className="field-input  p-2 text-end " name="username" value={login.username} type="text"  onChange={handleChange}/>
 

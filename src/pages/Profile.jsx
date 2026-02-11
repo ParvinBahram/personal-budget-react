@@ -1,7 +1,7 @@
 import AnimatedPage from "../../animations/AnimatedPage";
 import { useState } from "react";
 
-export default function Profile({user, USER_STORAGE_kEY,isLoggedIn, onLogout}){
+export default function Profile({user, USER_STORAGE_kEY}){
      const [editUser,setEditUser]= useState(user);
         const[isEditing, setIsEditing]= useState(false);
         const [showPassword, setShowPassword]= useState(false);
