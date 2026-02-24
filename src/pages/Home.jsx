@@ -1,8 +1,10 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import AnimatedPage from "../../animations/AnimatedPage";
+import { useContext } from "react";
+import { TransactionContext } from "../context/transactionContext";
 
-export default function Home({transactions, user, onLogout}){
-    
+export default function Home(){
+    const {transactions} = useContext(TransactionContext)
     return(
         <AnimatedPage>
     <>

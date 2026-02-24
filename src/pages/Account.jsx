@@ -1,11 +1,13 @@
 import AnimatedPage from "../../animations/AnimatedPage";
 import { NavLink, Outlet } from "react-router-dom";
 import { useContext } from "react";
-import { ThemeContext } from "../components/Context";
+import { AuthContext } from "../context/authContext";
+import { ThemeContext } from "../context/themeContext";
 
 
-export default function Account({user, isLoggedIn, onLogout}){
-       const {checked} = useContext(ThemeContext)
+export default function Account(){
+       const {checked} = useContext(ThemeContext);
+       const {user, isLoggedIn, handleLogout} = useContext(AuthContext);
    
 
     return(
@@ -19,7 +21,7 @@ export default function Account({user, isLoggedIn, onLogout}){
             <div className="flex flex-col mt-10 space-y-5">
                  <NavLink to="setting">تنظیمات <i className="fas fa-gear ml-2"></i></NavLink>
                 <NavLink to="profile"> حساب کاربری<i className="fas fa-user ml-2"></i></NavLink>
-                 <NavLink to="../loginPage" onClick={onLogout}>خروج<i className="fas fa-right-from-bracket ml-2"></i></NavLink>
+                 <NavLink to="../loginPage" onClick={handleLogout}>خروج<i className="fas fa-right-from-bracket ml-2"></i></NavLink>
             </div>
             </div>
            

@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import LoginContext, { ThemeContext } from "./Context";
 import Navbar from "./menu";
+import { AuthContext } from "../context/authContext";
 
 export default function ProtectedRoute(){
-  const isLoggedIn= useContext(LoginContext);
+  const {isLoggedIn }= useContext(AuthContext);
   
     if(!isLoggedIn){
     return <Navigate  to="/loginPage" replace  />

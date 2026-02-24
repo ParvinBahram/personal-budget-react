@@ -1,5 +1,5 @@
-import { Pie,PieChart, Cell, BarChart,Bar, XAxis, YAxis, Tooltip, Legend , ResponsiveContainer} from "recharts";
-import { useEffect, useState } from "react";
+
+import { useContext, useEffect, useState } from "react";
 import AnimatedPage from "../../animations/AnimatedPage";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
@@ -8,11 +8,15 @@ import gregorian from "react-date-object/calendars/gregorian";
 import gregorian_en from "react-date-object/locales/gregorian_en";
 import arabic from "react-date-object/calendars/arabic" ;
 import arabic_ar from "react-date-object/locales/arabic_ar";
+import { DateContext } from "../context/dateContext";
+import { TransactionContext } from "../context/transactionContext";
 
 const CHART_TYPE = "chart_type" ;
 
-export default function Chart({STORAGE_KEY, dateType, transactions}){
-    const storedTrs= JSON.parse(localStorage.getItem(STORAGE_KEY));
+export default function Chart(){
+  const {dateType} = useContext(DateContext);
+  const {TRANSACTION_KEY, transactions} = useContext(TransactionContext)
+    const storedTrs= JSON.parse(localStorage.getItem(TRANSACTION_KEY));
     const [totalAmount, setTotalAmount] = useState(0);
     const [fromDate, setFromDate]= useState("");
     const [toDate, setToDate]= useState("");
@@ -45,9 +49,9 @@ export default function Chart({STORAGE_KEY, dateType, transactions}){
     //   فیلتر تراکنشها بر اساس تاریخ
     const filteredTrs= transactions.filter( t => {
         const dt= new Date(t.date);
-        if(fromDate && dt < new Date(fromDate))
+        if(fromDate && dt < (fromDate))
             return false;
-        if(toDate && dt> new Date(toDate))
+        if(toDate && dt> (toDate))
             return false;
 
         return true;
@@ -55,31 +59,20 @@ export default function Chart({STORAGE_KEY, dateType, transactions}){
 
     // ساخت داده نمودار
     const chartData= filteredTrs.map(ft =>({
-        name: ft.date, value:ft.amount
+        name: ft.category, value:ft.amount
     }))
 
-
-
-
-  //   useEffect(()=>{
-  //       const sum = storedTrs.reduce((acc, storedTrs) => acc + Number(storedTrs.amount), 0 );
-  //       (setTotalAmount(sum));
-  //   },[totalAmount])
-
-  //    useEffect(() => {
-  //   console.log("Chart type changed:", chartType);
-  // }, [chartType]);
     
-  
+
     return(
         <AnimatedPage>
-        <div className="py-5 px-20 min-h-screen " >
+        <div className="py-5 px-20 " >
           <h2 className="text-center my-8">نمودارها</h2>
           <div className=" flex flex-col sm:flex-row justify-center items-center mx-auto gap-6 mb-10 md:gap-8" dir="rtl">
             <div className="">
             <label htmlFor=""  className="ml-2"> از تاریخ</label>
                <DatePicker value={fromDate} onChange={(value) => {
-                  setFromDate(value);
+                  setFromDate(value ? value.toDate() : null);
                        }}
                     calendar = {calenderConfig[dateType]?.calendar || persian}
                     locale={calenderConfig[dateType]?.locale }
@@ -89,7 +82,7 @@ export default function Chart({STORAGE_KEY, dateType, transactions}){
                     <div className="">
                     <label htmlFor="" className="ml-2"> تا تاریخ</label>
                  <DatePicker value={toDate} onChange={(value) => {
-                  setToDate(value);
+                  setToDate(value ? value.toDate() : null);
                        }}
                     calendar = {calenderConfig[dateType]?.calendar || persian}
                     locale={calenderConfig[dateType]?.locale }
@@ -107,9 +100,9 @@ export default function Chart({STORAGE_KEY, dateType, transactions}){
           </div>
        
         </div>
+         
         </AnimatedPage>
-        
-    )
-}
 
-
+        )
+            }
+   

@@ -1,11 +1,13 @@
 import { useContext, useReducer, useState } from "react";
-import { ThemeContext } from "./Context";
+import { ThemeContext } from "../context/themeContext";
+import { AuthContext } from "../context/authContext";
 
 const initialState= {username:"", password:"", phoneNumber:"", email:"" };
 
-export default function Register({onRegister}){
+export default function Register(){
     const [error,setError] = useState({});
      const {checked} = useContext(ThemeContext);
+    const {handleRegister} = useContext(AuthContext);
     
 
  function reducer(state, action){
@@ -51,7 +53,7 @@ export default function Register({onRegister}){
 
         if(Object.keys(submitErr).length === 0){
             setError({});
-            onRegister(user);
+            handleRegister(user);
             dispatch({type:"reset"})
             console.log(`username:${user.username}, password:${user.password}, phone:${user.phoneNumber}, email:${user.email}`);
     }}

@@ -1,14 +1,15 @@
 import { useContext, useState } from "react";
-import LoginContext, { ThemeContext } from "./Context";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/authContext";
+import { ThemeContext } from "../context/themeContext";
 
-export default function ForgetPassword({USER_STORAGE_kEY}){
+
+// const navigate = useNavigate();
+
+export default function ForgetPassword(){
     const {checked} = useContext(ThemeContext);
-    const {user, setUser, isLoggedIn} = useContext(LoginContext);
-    const[forgetForm,setForgetForm]= useState({
-         password: "",
-        confirmPassword: ""
-    });
+    const {USER_STORAGE_kEY, user, isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+    const[forgetForm,setForgetForm]= useState({ password: "",  confirmPassword: "" });
     const [error,setError] = useState("");
     const [success,setSuccess]= useState("");
     const navigate = useNavigate();
@@ -49,11 +50,11 @@ export default function ForgetPassword({USER_STORAGE_kEY}){
 
         localStorage.setItem(USER_STORAGE_kEY, JSON.stringify(updateUser));
         localStorage.setItem("isLoggedIn", "false");
-        setUser(null);
-
+        setIsLoggedIn(false);
 
     setError("");
     setSuccess("رمز عبور با موفقیت تغییر کرد");
+
 
     setTimeout(()=>{
         navigate("/loginPage", {replace:true});

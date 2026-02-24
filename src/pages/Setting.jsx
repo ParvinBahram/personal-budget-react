@@ -1,12 +1,14 @@
 
 import { useContext } from "react";
 import AnimatedPage from"../../animations/AnimatedPage"
-import { ThemeContext } from "../components/Context";
+import { ThemeContext } from "../context/themeContext";
+import { DateContext } from "../context/dateContext";
 
 
-export default function Setting({dateType,setDateType}){
+export default function Setting(){
+    const{dateType, setDateType} = useContext(DateContext);
     const {checked,setChecked}= useContext(ThemeContext);
-const setTheme = (e)=>{
+    const setTheme = (e)=>{
     setChecked(e.target.checked);
 }
     
@@ -18,7 +20,7 @@ const setTheme = (e)=>{
             <label className="ml-2">تم تاریک 
             </label>
             </div>
-            <div className="mb-7 flex flex-col sm:flex-row-reverse items-center gap-x-4 " >
+            {/* <div className="mb-7 flex flex-col sm:flex-row-reverse items-center gap-x-4 " >
                 <label htmlFor="currency" className=""> واحد پول  </label>
                 <div className="flex flex-row gap-x-5 mt-2">
                 <div className="">
@@ -42,7 +44,7 @@ const setTheme = (e)=>{
                 </div>
                 
               
-            </div>
+            </div> */}
 
             <div className="mb-5">
                 <select name="" value={dateType} onChange={(e)=>setDateType(e.target.value)} id="selected-date" className=" ml-3 p-0.5 rounded border border-teal-600 outline-0 text-sm">

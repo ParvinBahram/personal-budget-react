@@ -1,9 +1,10 @@
 import { useContext, useState } from 'react'
 import { NavLink, useNavigate } from'react-router-dom'
-import LoginContext, { ThemeContext } from './Context';
+import { AuthContext } from '../context/authContext';
+import { ThemeContext } from '../context/themeContext';
 
 export default function Navbar(){
-    const {isLoggedIn, user} = useContext(LoginContext);
+    const {isLoggedIn, user} = useContext(AuthContext);
     const {checked} = useContext(ThemeContext);
     const[isOpen, setIsOpen] = useState(false);
     const navigate=useNavigate();

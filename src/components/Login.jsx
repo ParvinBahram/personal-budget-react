@@ -1,11 +1,13 @@
 import { useContext, useState } from "react"
 import { NavLink, useNavigate } from "react-router-dom";
-import { ThemeContext } from "./Context";
+import { AuthContext } from "../context/authContext";
+import { ThemeContext } from "../context/themeContext";
 
-export default function Login({onLogin}){
+export default function Login(){
 const [login, setLogin] = useState({username:"", password:""});
   const [loginError, setLoginError]=useState("");
  const {checked} = useContext(ThemeContext);
+const {handleLogin} = useContext(AuthContext);
 
 const navigate = useNavigate()
 
@@ -16,7 +18,7 @@ const navigate = useNavigate()
 
     const handleSubmit= (e)=>{
         e.preventDefault();
-        const result = onLogin(login);
+        const result = handleLogin(login);
         
             if(result ==="NO_USER"){
                  setLoginError( "شما حسابی ندارید. ابتدا یک حساب ایجاد کنید" );

@@ -18,7 +18,6 @@ const sortAct =  {
 }
 
 
-
 export function handleSort(sortType, transactions){
     const action = sortAct[sortType];
     if(action) return action(transactions);

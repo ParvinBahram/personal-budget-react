@@ -1,7 +1,9 @@
 import AnimatedPage from "../../animations/AnimatedPage";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/authContext";
 
-export default function Profile({user, USER_STORAGE_kEY}){
+export default function Profile(){
+    const {user,USER_STORAGE_kEY}= useContext(AuthContext);
      const [editUser,setEditUser]= useState(user);
         const[isEditing, setIsEditing]= useState(false);
         const [showPassword, setShowPassword]= useState(false);

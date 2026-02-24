@@ -9,14 +9,18 @@ import arabic from "react-date-object/calendars/arabic" ;
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import AnimatedPage from "../../animations/AnimatedPage";
 import AnimatedModal from "../../animations/AnimatedModal";
-import { ThemeContext } from "../components/Context";
 import { handleSort } from "../components/Sort";
+import { ThemeContext } from "../context/themeContext";
+import { TransactionContext } from "../context/transactionContext";
+import { DateContext } from "../context/dateContext";
 
 const initialState = {type:"", category:"", amount:"", date: ""};
 const SORT_TYPE = "sort_type"
 
-export default function Transactions({ transactions, setTransactions, STORAGE_KEY,dateType}){
-  
+export default function Transactions(){
+  const {dateType} = useContext(DateContext);
+    const{transactions, setTransactions, TRANSACTION_KEY} = useContext(TransactionContext);
+
     const [form, setForm] = useState(initialState);
     const [showModal, setShowModal] = useState(false);
     const [editTransaction, setEditTransaction] = useState(null);
@@ -57,7 +61,7 @@ useEffect(() => {
 
     // save to local storage
   useEffect(()=>{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions))
+    localStorage.setItem(TRANSACTION_KEY, JSON.stringify(transactions))
   },[transactions])
 
      const addTransaction = (form)=>{
@@ -131,7 +135,7 @@ useEffect(() => {
     const visibleTr= showAll ? filteredTrns : filteredTrns.slice(-5);
     return(
       <AnimatedPage >
-        <div dir="rtl" className="py-5 px-6 min-h-screen bg-amber-100/50">
+        <div dir="rtl" className={` ${checked ? "bg-gray-900 text-white" : " bg-amber-100/50"} py-5 px-6 min-h-screen`}>
           <div className="flex flex-col sm:flex-row  sm:justify-center gap-10 items-center mt-5 mb-10 p-1">
             <p>  جمع کل :  <span className={totalAmount < 0 ? "text-red-600" : "text-green-600"}>{totalAmount}</span></p>
             <div className="">
